@@ -5,12 +5,16 @@
 #define LED_PINO_QUENTE 4  // D2, VERMELHO
 #define DHT11_SINAL 2  // gpio 2, pino D4
 #define DHT_TIPO DHT11  // tipo do meu sensor
+#define TOKEN "KSHA627ESP"
 DHT dht11(DHT11_SINAL, DHT_TIPO);
+
+
+// ctgqx-177-37-186-190.a.free.pinggy.link:42935
 
 const char* rede = "ariane5055xda";
 const char* senha = "A2025*ufc";
-const char* ip = "jqatw-200-129-38-131.a.free.pinggy.link";
-const int porta = 45995;
+const char* ip = "ctgqx-177-37-186-190.a.free.pinggy.link";
+const int porta = 42935;
 
 void setup() {
   pinMode(LED_PINO_ALERTA, OUTPUT);
@@ -36,7 +40,7 @@ void loop() {
   } else {
     WiFiClient cliente;
     if (cliente.connect(ip, porta)) {
-      String msg = "temperatura:" + String(temperatura) +
+      String msg = "token:" TOKEN ";temperatura:" + String(temperatura) +
                    ";umidade:" + String(umidade);
       cliente.println(msg);
       // aguardando o comando do servidor

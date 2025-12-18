@@ -4,6 +4,7 @@ HOST = "0.0.0.0"
 PORTA = 5050
 TEMPERATURA_MAXIMA = 35.0
 TEMPERATURA_MINIMA = 30.0
+TOKEN_CHECK = "KSHA627ESP"
 
 # IP, TCP
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -15,8 +16,21 @@ print("servidor rodando na porta " + str(PORTA))
 
 while True:
     conexao, endereco = server.accept() # quando um cliente conecta, retorna obj conexao e o endereco
-    dados = conexao.recv(1024).decode().strip() # escuta ate1024 caracteres, decode converte de Byte pra texto
+    msg = conexao.recv(1024).decode().strip() # escuta ate1024 caracteres, decode converte de Byte pra texto
 
+    if not msg.startswith("token:"):
+        print("token ausente, conexao fechada")
+        conexao.close()
+        continue
+        
+    token_recebido = msg.split("token:")[1].split(";")[0]
+
+    if token_recebido != TOKEN_CHECK:
+        print("token invalido, conexao fechada")
+        conexao.close()
+        continue
+
+    dados = msg.replace(f"token:{TOKEN_CHECK};", "")
     print(f"vindo de  {endereco} \n dados:  {dados}\n")
 
     try:
